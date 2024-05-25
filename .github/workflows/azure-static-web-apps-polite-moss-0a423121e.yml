@@ -3,7 +3,7 @@ name: Azure Static Web Apps CI/CD
 on:
   push:
     branches:
-      - main  # Ustaw gałąź, na której chcesz uruchomić wdrożenie
+      - main # Ustaw gałąź, na której chcesz uruchomić wdrożenie
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -14,4 +14,16 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     name: Build and Deploy Job
-    steps
+    steps:
+    - name: Checkout GitHub Action
+      uses: actions/checkout@v2
+      
+    - name: Build And Deploy
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: 'upload'
+        app_location: '.' # Zaktualizuj tę ścieżkę do lokalizacji aplikacji w twoim repozytorium
+        api_location: 'api' # Zaktualizuj tę ścieżkę, jeśli masz API
+        output_location: 'build' # Zaktualizuj tę ścieżkę do lokalizacji wyników budowania
